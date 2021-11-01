@@ -1,13 +1,35 @@
 import {useNavigation} from '@react-navigation/core';
-import React from 'react';
-import {Button} from 'react-native';
-import {Container, ScreenTitle} from './styles';
+import React, {useState} from 'react';
+import {Button, Image} from 'react-native';
+import MyInputText from '../../components/MyInputText';
+import {Container, InputContainer} from './styles';
+import HomeHeader from '../../assets/HomeScreen/HomeHeader.png';
+import PokemonCard from '../../components/HomeScreen/PokemonCard';
+import * as Sprites from '../../assets/sprites';
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [text, setText] = useState('');
 
   return (
     <Container>
-      <ScreenTitle>HomeScreen</ScreenTitle>
+      <Image source={HomeHeader} />
+      <InputContainer>
+        <MyInputText
+          label="Nome do Pokemon"
+          placeholder="Digite aqui..."
+          value={text}
+          onChangeText={newText => {
+            setText(newText);
+          }}
+        />
+      </InputContainer>
+      <PokemonCard
+        mainType="grass"
+        entryNumber={1}
+        name="Bulbassauro"
+        image={Sprites.img1}
+        otherTypes={['poison']}
+      />
       <Button
         title="Navigate to next Screen"
         onPress={() => {
