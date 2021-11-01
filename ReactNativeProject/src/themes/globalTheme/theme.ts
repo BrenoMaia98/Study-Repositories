@@ -1,5 +1,8 @@
 import {Dimensions, Platform, PixelRatio} from 'react-native';
-const {width: SCREEN_WIDTH} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
+
+export const SCREEN_HEIGHT = height;
+export const SCREEN_WIDTH = width;
 
 // based on iphone 5s's scale
 const scale = SCREEN_WIDTH / 320;
@@ -13,19 +16,36 @@ export function normalize(size: number) {
     return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
   }
 }
+const blue = '#1F26D0';
+const blueLight = '#397AF9';
+const bluePale = '#B9B8E9';
+const green = '#46745C';
+const greenPale = '#C5DAC3';
+const red = '#D01F1F';
+const redPale = '#DAC3C3';
+const black = '#000000';
+const gray = '#828282';
+const white = '#ffffff';
 
 export default {
   color: {
-    blue: '#1F26D0',
-    // blueLight: '#397AF9',
-    // bluePale: '#B9B8E9',
-    // green: '#46745C',
-    // greenPale: '#C5DAC3',
-    // red: '#D01F1F',
-    // redPale: '#DAC3C3',
-    // black: '#000000',
-    // gray: '#828282',
-    // white: '#ffffff',
+    blue,
+    blueLight,
+    bluePale,
+    green,
+    greenPale,
+    red,
+    redPale,
+    black,
+    gray,
+    white,
+  },
+  type: {
+    grass: {border: green, backGroundColor: greenPale},
+    fire: {border: red, backGroundColor: redPale},
+    water: {border: blue, backGroundColor: bluePale},
+    flying: {border: blue, backGroundColor: bluePale},
+    poison: {border: red, backGroundColor: redPale},
   },
   font: {
     size: {
