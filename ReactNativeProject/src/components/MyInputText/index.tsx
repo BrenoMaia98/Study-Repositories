@@ -1,11 +1,9 @@
 import React from 'react';
-
 import {TextInputProps} from 'react-native';
-
-import {Container, CustomTextInput, TextLabel, TextError} from './styles';
+import {Container, CustomTextInput, TextError, TextLabel} from './styles';
 
 interface MyInputTextProps extends TextInputProps {
-  label?: string;
+  label: string;
   inputError?: string;
 }
 
@@ -18,7 +16,7 @@ const MyInputText: React.FC<MyInputTextProps> = ({
     <Container>
       <TextLabel>{label}</TextLabel>
       <CustomTextInput {...rest} />
-      <TextError>{inputError}</TextError>
+      {inputError && <TextError>{inputError}</TextError>}
     </Container>
   );
 };
