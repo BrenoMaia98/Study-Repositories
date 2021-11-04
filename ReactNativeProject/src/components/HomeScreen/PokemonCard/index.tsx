@@ -16,7 +16,6 @@ import {ActivityIndicator, TouchableOpacity} from 'react-native';
 import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import {PokemonTypes} from '../../../service/PokemonTypes';
-import {pokemonClient} from '../../../service/PokemonClient';
 import useStorage, {PokemonStoreData} from '../../../storage/fakeContext';
 
 export type PokemonCardInfo = {
@@ -31,7 +30,7 @@ type PokemonCardProps = {
   pokemonName: string;
 };
 const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
-  const service = {pokemon: new PokemonService(), pokemonClient};
+  const service = {pokemon: new PokemonService()};
   const navigation = useNavigation();
   const {updatePokemonData} = useStorage();
 
