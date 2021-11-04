@@ -1,8 +1,8 @@
 import {Dimensions, Platform, PixelRatio} from 'react-native';
 const {width, height} = Dimensions.get('window');
 
-export const SCREEN_HEIGHT = height;
-export const SCREEN_WIDTH = width;
+const SCREEN_HEIGHT = height;
+const SCREEN_WIDTH = width;
 
 // based on iphone 5s's scale
 const scale = SCREEN_WIDTH / 320;
@@ -28,6 +28,11 @@ const gray = '#828282';
 const white = '#ffffff';
 
 export default {
+  utils: {
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+  },
+
   color: {
     blue,
     blueLight,
