@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {
   Container,
@@ -6,11 +6,18 @@ import {
   Name,
   PokemonTypeBadge,
   PokemonImage,
+  ImageView,
+  BadgesContainer,
+  BadgeText,
 } from './styles';
 import * as BadgeTypeImage from '../../../assets/PokemonType';
 import PokemonService from '../../../service/PokemonService';
-
-export type PokemonTypes = 'grass' | 'fire' | 'water' | 'flying' | 'poison';
+import {ActivityIndicator, TouchableOpacity} from 'react-native';
+import {useTheme} from 'styled-components';
+import {useNavigation} from '@react-navigation/native';
+import {PokemonTypes} from '../../../service/PokemonTypes';
+import {pokemonClient} from '../../../service/PokemonClient';
+import useStorage, {PokemonStoreData} from '../../../storage/fakeContext';
 
 export type PokemonCardInfo = {
   mainType: PokemonTypes;
@@ -24,7 +31,9 @@ type PokemonCardProps = {
   pokemonName: string;
 };
 const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
-  const service = {pokemon: new PokemonService()};
+  const service = {pokemon: new PokemonService(), pokemonClient};
+  const navigation = useNavigation();
+  const {updatePokemonData} = useStorage();
 
   const [pokemonCardInfo, setPokemonCardInfo] = useState<PokemonCardInfo>({
     entryNumber: '',
@@ -33,39 +42,81 @@ const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
     name: '',
     pokemonTypes: [],
   });
+  const [otherPokemonDetails, setOtherPokemonDetails] = useState<
+    Partial<PokemonStoreData>
+  >({} as PokemonStoreData);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const {entryNumber, image, mainType, pokemonTypes, name} = pokemonCardInfo;
+  const theme = useTheme();
 
-  useEffect(() => {
+  // to prevent duplicated API call's
+  const onMount = useCallback(() => {
     service.pokemon.getPokemonDetails(pokemonName).then(resp => {
-      const {id, sprites, types} = resp.data;
+      const {id, weight, height, stats, sprites, types, species} = resp.data;
+      const newPokemonTypes = types.map(item => item.type.name);
+
       setIsLoaded(true);
-      setPokemonCardInfo({
-        entryNumber: id,
-        pokemonTypes: types.map(item => item.type.name),
+      const newPokemonCardInfo = {
+        entryNumber: `#${'000'.substr(id.toString().length)}${id}`,
+        pokemonTypes: newPokemonTypes,
         name: pokemonName,
         mainType: types[0].type.name,
-        image: sprites.other['official-artwork'].front_default,
-      });
+        image:
+          sprites.other['official-artwork'].front_default ||
+          sprites.front_default,
+      };
+      setPokemonCardInfo(newPokemonCardInfo);
+
+      const newStoreData = {
+        ...newPokemonCardInfo,
+        weight: `${weight / 10} kg`,
+        specie: species.name,
+        height: `${height / 10} m`,
+        stats: {
+          hp: stats[0].base_stat || 0,
+          attack: stats[1].base_stat || 0,
+          defense: stats[2].base_stat || 0,
+          specialAttack: stats[3].base_stat || 0,
+          specialDefense: stats[4].base_stat || 0,
+          speed: stats[5].base_stat || 0,
+        },
+      };
+      setOtherPokemonDetails(newStoreData);
     });
   }, [pokemonName, service.pokemon]);
 
+  useEffect(() => onMount(), [onMount]);
+
+  const onPressCard = () => {
+    updatePokemonData({...pokemonCardInfo, ...otherPokemonDetails});
+
+    navigation.navigate('PokemonDetails' as never); //@TO-FIX navigation typescript
+  };
+
+  //Render Functions
   const renderTypeBadges = (type: PokemonTypes, key: string) => {
     return <PokemonTypeBadge key={key} source={BadgeTypeImage[type]} />;
   };
 
-  if (isLoaded === false) {
-    return null;
-  }
-
   return (
     <Container mainType={mainType}>
-      {!!image && <PokemonImage source={{uri: image}} />}
-      <EntryNumber>{entryNumber}</EntryNumber>
-      <Name>{name === 'charizard' ? 'Não é dragão' : name}</Name>
-      {pokemonTypes.map(item => renderTypeBadges(item, `key-${item}`))}
+      {isLoaded === false ? (
+        <ActivityIndicator size="large" color={theme.color.blue} />
+      ) : (
+        <TouchableOpacity onPress={onPressCard}>
+          <ImageView>
+            {!!image && <PokemonImage source={{uri: image}} />}
+          </ImageView>
+          <EntryNumber>{entryNumber}</EntryNumber>
+          <Name>{name === 'charizard' ? 'Não é dragão' : name}</Name>
+          <BadgesContainer>
+            <BadgeText>Tipo:</BadgeText>
+            {pokemonTypes.map(item => renderTypeBadges(item, `key-${item}`))}
+          </BadgesContainer>
+        </TouchableOpacity>
+      )}
     </Container>
   );
 };
