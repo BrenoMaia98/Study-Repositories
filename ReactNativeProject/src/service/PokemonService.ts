@@ -1,5 +1,9 @@
 import api from './api';
-import {PokemonDetailsResponse, PokemonListIndexes} from './PokemonTypes';
+import {
+  PokemonDetailsResponse,
+  PokemonListIndexes,
+  PokemonSpeciesDetailsResponse,
+} from './PokemonTypes';
 
 export default class PokemonService {
   getPokemonList(maxNumber: number) {
@@ -10,5 +14,9 @@ export default class PokemonService {
 
   getPokemonDetails(name: string) {
     return api.get<PokemonDetailsResponse>(`/pokemon/${name}`);
+  }
+
+  getPokemonSpeciesDetails(name: string) {
+    return api.get<PokemonSpeciesDetailsResponse>(`pokemon-species/${name}`);
   }
 }

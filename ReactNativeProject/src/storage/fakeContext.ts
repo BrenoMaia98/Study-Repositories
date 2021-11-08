@@ -1,5 +1,5 @@
 // import {useCallback, useEffect, useMemo, useState} from 'react';
-import {PokemonCardInfo} from '../components/HomeScreen/PokemonCard';
+import {PokemonCardInfo} from '../components/forScreens/HomeScreen/PokemonCard';
 
 /*
  This is a fake context, to be a data provider between

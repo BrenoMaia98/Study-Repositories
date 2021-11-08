@@ -1,5 +1,5 @@
 import {Dimensions, Platform, PixelRatio} from 'react-native';
-const {width, height} = Dimensions.get('window');
+const {width, height} = Dimensions.get('screen');
 
 const SCREEN_HEIGHT = height;
 const SCREEN_WIDTH = width;
@@ -25,6 +25,7 @@ const red = '#D01F1F';
 const redPale = '#DAC3C3';
 const black = '#000000';
 const gray = '#828282';
+const lightGray = '#ddd';
 const white = '#ffffff';
 
 export default {
@@ -44,14 +45,19 @@ export default {
     redPale,
     black,
     gray,
+    lightGray,
     white,
   },
   type: {
-    grass: {border: green, backGroundColor: greenPale},
-    fire: {border: red, backGroundColor: redPale},
-    water: {border: blue, backGroundColor: bluePale},
-    flying: {border: blue, backGroundColor: bluePale},
-    poison: {border: red, backGroundColor: redPale},
+    grass: {
+      darkColor: green,
+      paleColor: greenPale,
+      lightColorContrast: white,
+    },
+    fire: {darkColor: red, paleColor: redPale, lightColorContrast: white},
+    water: {darkColor: blue, paleColor: bluePale, lightColorContrast: white},
+    flying: {darkColor: blue, paleColor: bluePale, lightColorContrast: white},
+    poison: {darkColor: red, paleColor: redPale, lightColorContrast: white},
   },
   font: {
     size: {

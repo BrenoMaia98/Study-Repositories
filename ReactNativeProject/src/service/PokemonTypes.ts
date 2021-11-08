@@ -69,3 +69,17 @@ export type PokemonDetailsResponse = {
     name: string;
   };
 };
+
+export type PokemonSpeciesDetailsResponse = {
+  flavor_text_entries: Array<{
+    flavor_text: string; //description
+    language: {
+      name: string; //en
+    };
+  }>;
+  base_happiness: number;
+  capture_rate: number;
+  growth_rate: {
+    name: string;
+  };
+};
