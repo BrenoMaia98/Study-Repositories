@@ -4,9 +4,11 @@ import {PokemonTypes} from '.';
 
 export const Container = styled.View<{mainType: PokemonTypes}>`
   width: 48%;
-  max-width: 180px;
 
-  margin-top: 50px;
+  max-width: ${({theme}) => theme.utils.normalize(150)}px;
+
+  margin-top: ${({theme}) => theme.utils.normalize(50)}px;
+
   margin-bottom: 15px;
   padding: 15px;
   padding-top: 0px;
@@ -23,10 +25,12 @@ export const Container = styled.View<{mainType: PokemonTypes}>`
 //-----------------------------------
 
 export const ImageView = styled.View`
-  margin-top: -50px;
+  margin-top: ${({theme}) => theme.utils.normalize(-50)}px;
 
   width: 150px;
   height: 150px;
+  width: ${({theme}) => theme.utils.normalize(120)}px;
+  height: ${({theme}) => theme.utils.normalize(120)}px;
 `;
 
 export const PokemonImage = styled(Image).attrs({objectFit: 'contain'})`

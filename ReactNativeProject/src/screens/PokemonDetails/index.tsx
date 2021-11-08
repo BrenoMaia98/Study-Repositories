@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Button, Text} from 'react-native';
-import useStorage from '../../storage/fakeContext';
+import {store} from '../../storage/fakeContext';
 import {Container, ScreenTitle} from './styles';
 const PokemonDetails = () => {
   const navigation = useNavigation();
-  const {store} = useStorage();
   return (
     <Container>
       <ScreenTitle>PokemonDetails</ScreenTitle>

@@ -16,7 +16,10 @@ import {ActivityIndicator, TouchableOpacity} from 'react-native';
 import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import {PokemonTypes} from '../../../service/PokemonTypes';
-import useStorage, {PokemonStoreData} from '../../../storage/fakeContext';
+import {
+  PokemonStoreData,
+  updatePokemonData,
+} from '../../../storage/fakeContext';
 
 export type PokemonCardInfo = {
   mainType: PokemonTypes;
@@ -32,7 +35,6 @@ type PokemonCardProps = {
 const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
   const service = {pokemon: new PokemonService()};
   const navigation = useNavigation();
-  const {updatePokemonData} = useStorage();
 
   const [pokemonCardInfo, setPokemonCardInfo] = useState<PokemonCardInfo>({
     entryNumber: '',
@@ -50,8 +52,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
   const {entryNumber, image, mainType, pokemonTypes, name} = pokemonCardInfo;
   const theme = useTheme();
 
-  // to prevent duplicated API call's
-  const onMount = useCallback(() => {
+  useEffect(() => {
     service.pokemon.getPokemonDetails(pokemonName).then(resp => {
       const {id, weight, height, stats, sprites, types, species} = resp.data;
       const newPokemonTypes = types.map(item => item.type.name);
@@ -84,9 +85,8 @@ const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
       };
       setOtherPokemonDetails(newStoreData);
     });
-  }, [pokemonName, service.pokemon]);
-
-  useEffect(() => onMount(), [onMount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onPressCard = () => {
     updatePokemonData({...pokemonCardInfo, ...otherPokemonDetails});

@@ -31,6 +31,7 @@ export default {
   utils: {
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
+    normalize,
   },
 
   color: {

@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+// import {useCallback, useEffect, useMemo, useState} from 'react';
 import {PokemonCardInfo} from '../components/HomeScreen/PokemonCard';
 
 /*
@@ -22,32 +22,18 @@ export interface PokemonStoreData extends PokemonCardInfo {
 
 type StoreData = {pokemonData: PokemonStoreData};
 
-const useStorage = () => {
-  const [store, setStore] = useState<StoreData>({} as StoreData);
+let store: StoreData = {} as StoreData;
 
-  useEffect(() => {
-    console.log('STORE UPDATED', store);
-  }, [store]);
-
-  const updateStore = useCallback(
-    (newData: Partial<StoreData>) => {
-      setStore({...store, ...newData});
-    },
-    [store],
-  );
-
-  const updatePokemonData = useCallback(
-    (newData: Partial<PokemonStoreData>) => {
-      setStore({...store, pokemonData: {...newData} as PokemonStoreData});
-    },
-    [store],
-  );
-
-  const cleanStore = useCallback(() => {
-    setStore({} as StoreData);
-  }, []);
-
-  return {store, updateStore, updatePokemonData, cleanStore};
+const updateStore = (newData: Partial<StoreData>) => {
+  store = {...store, ...newData};
 };
 
-export default useStorage;
+const updatePokemonData = (newData: Partial<PokemonStoreData>) => {
+  store = {...store, pokemonData: {...newData} as PokemonStoreData};
+};
+
+const cleanStore = () => {
+  store = {} as StoreData;
+};
+
+export {store, updateStore, updatePokemonData, cleanStore};
