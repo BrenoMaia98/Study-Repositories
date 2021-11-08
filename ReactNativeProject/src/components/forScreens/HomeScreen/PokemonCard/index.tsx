@@ -10,16 +10,16 @@ import {
   BadgesContainer,
   BadgeText,
 } from './styles';
-import * as BadgeTypeImage from '../../../assets/PokemonType';
-import PokemonService from '../../../service/PokemonService';
+import * as BadgeTypeImage from '../../../../assets/PokemonType';
+import PokemonService from '../../../../service/PokemonService';
 import {ActivityIndicator, TouchableOpacity} from 'react-native';
 import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
-import {PokemonTypes} from '../../../service/PokemonTypes';
+import {PokemonTypes} from '../../../../service/PokemonTypes';
 import {
   PokemonStoreData,
   updatePokemonData,
-} from '../../../storage/fakeContext';
+} from '../../../../storage/fakeContext';
 
 export type PokemonCardInfo = {
   mainType: PokemonTypes;
