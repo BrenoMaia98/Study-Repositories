@@ -3,8 +3,9 @@ import React, {useCallback, useEffect} from 'react';
 import {Button} from 'react-native';
 import MyInputText from '../../components/MyInputText';
 import {CardsView, ContainerScreen, ScrollViewScreen} from './styles';
-import PokemonCard from '../../components/HomeScreen/PokemonCard';
-import PokemonService, {PokemonListIndexes} from '../../service/PokemonService';
+import PokemonCard from '../../components/forScreens/HomeScreen/PokemonCard';
+import PokemonService from '../../service/PokemonService';
+import {PokemonListIndexes} from '../../service/PokemonTypes';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const service = {pokemon: new PokemonService()};
