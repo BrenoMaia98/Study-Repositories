@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   Container,
@@ -16,10 +16,8 @@ import {ActivityIndicator, TouchableOpacity} from 'react-native';
 import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import {PokemonTypes} from '../../../../service/PokemonTypes';
-import {
-  PokemonStoreData,
-  updatePokemonData,
-} from '../../../../storage/fakeContext';
+import {useAppDispatch, useAppSelector} from '../../../../hooks/reduxHooks';
+import {updatePokemonData} from '../../../../storage/slices/pokemonSlice';
 
 export type PokemonCardInfo = {
   mainType: PokemonTypes;
@@ -46,7 +44,6 @@ const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
   const [otherPokemonDetails, setOtherPokemonDetails] = useState<
     Partial<PokemonStoreData>
   >({} as PokemonStoreData);
-
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const {entryNumber, image, mainType, pokemonTypes, name} = pokemonCardInfo;
@@ -88,8 +85,9 @@ const PokemonCard: React.FC<PokemonCardProps> = ({pokemonName}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const dispatch = useAppDispatch();
   const onPressCard = () => {
-    updatePokemonData({...pokemonCardInfo, ...otherPokemonDetails});
+    dispatch(updatePokemonData({...pokemonCardInfo, ...otherPokemonDetails}));
 
     navigation.navigate('PokemonDetails' as never); //@TO-FIX navigation typescript
   };

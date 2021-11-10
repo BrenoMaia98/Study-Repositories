@@ -1,6 +1,6 @@
 import React from 'react';
+import {useAppSelector} from '../../../hooks/reduxHooks';
 import {PokemonSpeciesDetailsResponse} from '../../../service/PokemonTypes';
-import {store} from '../../../storage/fakeContext';
 import {
   AboutSectionView,
   ItemView,
@@ -16,7 +16,10 @@ const AboutSection = ({
   flavor_text_entries,
   growth_rate,
 }: PokemonSpeciesDetailsResponse) => {
-  const {specie, height, weight} = store.pokemonData;
+  const {specie, height, weight} = useAppSelector(
+    state => state.pokemon.pokemonData,
+  );
+  // const {specie, height, weight} = store.pokemonData;
 
   const renderStatsItem = (label?: string, value?: string | number) => (
     <ItemView>

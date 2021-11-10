@@ -1,17 +1,16 @@
 import {useNavigation} from '@react-navigation/core';
 import React, {useEffect, useState} from 'react';
-import {Button, FlatList} from 'react-native';
+import {ActivityIndicator, Button, FlatList} from 'react-native';
 import {PokemonImage} from '../../components/forScreens/HomeScreen/PokemonCard/styles';
+import {useAppSelector} from '../../hooks/reduxHooks';
 import PokemonService from '../../service/PokemonService';
 import {PokemonSpeciesDetailsResponse} from '../../service/PokemonTypes';
-import {store} from '../../storage/fakeContext';
 import AboutSection from './AboutSection';
 import EvolutionSection from './EvolutionSection';
 import StatsSection from './StatsSection';
 import {
   ContainerScreen,
   ScrollViewScreen,
-  ScreenTitle,
   Divider,
   TabItemText,
   TabButtonView,
@@ -32,18 +31,26 @@ const PokemonDetails = () => {
       flavor_text_entries: [{flavor_text: '', language: {name: ''}}],
       growth_rate: {name: ''},
     });
+  const [isLoading, setLoading] = useState<boolean>(true);
+
+  const pokemonData = useAppSelector(redux => redux.pokemon.pokemonData);
 
   useEffect(() => {
-    service.pokemon
-      .getPokemonSpeciesDetails(store.pokemonData.specie)
-      .then(resp => {
-        setSpeciesDetails({
-          ...resp.data,
-          flavor_text_entries: resp.data.flavor_text_entries.filter(item => {
-            return item.language.name === 'en';
-          }),
+    if (pokemonData && pokemonData.specie) {
+      service.pokemon
+        .getPokemonSpeciesDetails(pokemonData.specie)
+        .then(resp => {
+          setSpeciesDetails({
+            ...resp.data,
+            flavor_text_entries: resp.data.flavor_text_entries.filter(item => {
+              return item.language.name === 'en';
+            }),
+          });
+          setLoading(false);
         });
-      });
+    } else {
+      setLoading(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,34 +58,41 @@ const PokemonDetails = () => {
     <ContainerScreen>
       <ScrollViewScreen>
         <Button title="Go Back" onPress={() => navigation.goBack()} />
-        <ImageView>
-          <PokemonImage source={{uri: store.pokemonData.image}} />
-        </ImageView>
-        <FlatList
-          data={statusTabs}
-          keyExtractor={item => item}
-          renderItem={({item}) => (
-            <TabButtonView
-              onPress={() => {
-                setSelectedTab(item);
-              }}
-              type={store.pokemonData.mainType}>
-              <TabItemText
-                active={selectedTab === item}
-                type={store.pokemonData.mainType}>
-                {item}
-              </TabItemText>
-            </TabButtonView>
-          )}
-          horizontal
-        />
-        {selectedTab === 'Sobre' && <AboutSection {...speciesDetails} />}
-        {selectedTab === 'Status' && (
-          <StatsSection stats={store.pokemonData.stats} color="black" />
-        )}
-        {selectedTab === 'Evolução' && <EvolutionSection />}
 
-        <Divider />
+        {isLoading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <>
+            <ImageView>
+              <PokemonImage source={{uri: pokemonData.image}} />
+            </ImageView>
+            <FlatList
+              data={statusTabs}
+              keyExtractor={item => item}
+              renderItem={({item}) => (
+                <TabButtonView
+                  onPress={() => {
+                    setSelectedTab(item);
+                  }}
+                  type={pokemonData.mainType}>
+                  <TabItemText
+                    active={selectedTab === item}
+                    type={pokemonData.mainType}>
+                    {item}
+                  </TabItemText>
+                </TabButtonView>
+              )}
+              horizontal
+            />
+            {selectedTab === 'Sobre' && <AboutSection {...speciesDetails} />}
+            {selectedTab === 'Status' && (
+              <StatsSection stats={pokemonData.stats} color="black" />
+            )}
+            {selectedTab === 'Evolução' && <EvolutionSection />}
+
+            <Divider />
+          </>
+        )}
       </ScrollViewScreen>
     </ContainerScreen>
   );
